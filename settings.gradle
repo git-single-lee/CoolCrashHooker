@@ -1,0 +1,5 @@
+rootProject.name = "CoolCrashHooker"
+include ':app'
+include ':crashcapture_core'
+include ':crashcapture_plugin'
+include ':crashcapture_commons'

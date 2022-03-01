@@ -1,0 +1,2 @@
+apply plugin: 'java'
+apply from : rootProject.file("script/publish.gradle")

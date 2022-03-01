@@ -1,0 +1,19 @@
+apply plugin: 'groovy'
+apply from : rootProject.file("script/publish.gradle")
+
+repositories {
+    jcenter()
+    google()
+}
+
+// 声明依赖的包
+dependencies {
+    implementation gradleApi()
+    implementation localGroovy()
+    implementation 'com.android.tools.build:gradle:3.5.3'
+
+    implementation "com.cool.crashcapture:crashcapture_commons:1.0.1"
+
+    implementation "org.ow2.asm:asm:7.1"
+    implementation "org.ow2.asm:asm-commons:7.1"
+}
