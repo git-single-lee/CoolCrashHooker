@@ -15,7 +15,8 @@ import org.objectweb.asm.Opcodes;
  * version: 1.0
  */
 public class ThreadClassVisitor extends ClassVisitor implements Opcodes {
-    boolean maybeThread = false;
+    private int maybeThread = 0;
+    private String name = "";
 
     public ThreadClassVisitor(int api) {
         super(api);
@@ -28,7 +29,8 @@ public class ThreadClassVisitor extends ClassVisitor implements Opcodes {
     @Override
     public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
         super.visit(version, access, name, signature, superName, interfaces);
-        maybeThread = tryInject(version, access, name, signature, superName, interfaces);
+        this.maybeThread = tryInject(version, access, name, signature, superName, interfaces);
+        this.name = name
     }
 
     @Override
@@ -44,34 +46,38 @@ public class ThreadClassVisitor extends ClassVisitor implements Opcodes {
     @Override
     public MethodVisitor visitMethod(int access, String name, String descriptor, String signature, String[] exceptions) {
         MethodVisitor mv = super.visitMethod(access, name, descriptor, signature, exceptions);
-        boolean maybeMethod = tryInjectMethod(name, descriptor);
-        if (maybeMethod) {
-            println("ThreadClassVisitor===> inject")
-            return new ThreadMethodVisitor(Opcodes.ASM7, mv, access, name, descriptor);
+        if (maybeThread != 0) {
+            boolean maybeMethod = tryInjectMethod(name, descriptor);
+            if (maybeMethod) {
+                println("ThreadClassVisitor===> inject")
+                return new ThreadMethodVisitor(maybeThread, Opcodes.ASM7, mv, access, name, descriptor);
+            }
         }
         return mv;
     }
 
-    @Deprecated
-    public boolean tryInject(int version, int access, String name, String signature, String superName, String[] interfaces) {
+    public int tryInject(int version, int access, String name, String signature, String superName, String[] interfaces) {
         if (interfaces != null) {
             for (String item : interfaces) {
                 if (item.equals("java/lang/Runnable")) {
-                    return true;
+                    return 1;
                 }
             }
         }
+        if ("android/os/AsyncTask".equals(superName)) {
+            return 2;
+        }
         if ("android/os/Handler".equals(superName)) {
-            return true;
+            return 3;
         }
         if ("java/lang/Thread".equals(superName)) {
-            return true;
+            return 4;
         }
-        return false;
+        return 0;
     }
 
     public boolean tryInjectMethod(String methodName, String methodDesc) {
-        println("ThreadClassVisitor===> try inject: methodName: ${methodName} methodDesc:${methodDesc}" )
+        println("ThreadClassVisitor===> try inject: className: ${name} methodName: ${methodName} methodDesc:${methodDesc}" )
         if (methodName.equals("run") && methodDesc.equals("()V"))
             return true;
         if (methodName.equals("doInBackground"))

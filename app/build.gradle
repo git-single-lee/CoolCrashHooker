@@ -1,9 +1,5 @@
 apply plugin: 'com.android.application'
-apply plugin: 'crash.capture.plugin'
-
-//ThreadCapture {
-//
-//}
+//apply plugin: 'crash.capture.plugin'
 
 android {
     compileSdkVersion 31
