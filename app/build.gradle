@@ -1,14 +1,14 @@
 apply plugin: 'com.android.application'
 apply plugin: 'crash.capture.plugin'
 
-//threadCapture {
-//    classToMethods = [
-//            "android/os/AsyncTask" : ["doInBackground"],
-//            "android/os/Handler"  : ["handleMessage"],
-//            "java/lang/Thread": ["run"],
-//            "java/lang/Runnable": ["run"],
-//    ]
-//}
+threadCapture {
+    parentToMethods = [ // 基于父类/接口来实现捕获（只支持一层继承/实现）
+            "android/os/AsyncTask" : ["doInBackground"],
+            "android/os/Handler"  : ["handleMessage"],
+            "java/lang/Thread": ["run"],
+            "java/lang/Runnable": ["run"],
+    ]
+}
 
 android {
     compileSdkVersion 31
