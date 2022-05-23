@@ -13,7 +13,7 @@ import javafx.util.Pair;
  * desc   :
  * version: 1.0
  */
-public final class ASMUtil {
+public final class ClassVisiterUtil {
 
     public static Pair<Integer, Integer> getDefaultByDesc(String methodDesc) {
         Pair<Integer, Integer> pair = null;
@@ -28,27 +28,27 @@ public final class ASMUtil {
             value = Opcodes.ACONST_NULL;
             opcode = Opcodes.ARETURN;
 
-        } else if (methodDesc.endsWith("Z") ||
-                methodDesc.endsWith("I") ||
-                methodDesc.endsWith("S") ||
-                methodDesc.endsWith("B") ||
-                methodDesc.endsWith("C")) {
+        } else if (methodDesc.endsWith("Z") || // boolean
+                methodDesc.endsWith("I") || // int
+                methodDesc.endsWith("S") || // short
+                methodDesc.endsWith("B") || // byte
+                methodDesc.endsWith("C")) { // char
             value = Opcodes.ICONST_0;
             opcode = Opcodes.IRETURN;
 
-        } else if (methodDesc.endsWith("J")) {
+        } else if (methodDesc.endsWith("J")) { // long
             value = Opcodes.LCONST_0;
             opcode = Opcodes.LRETURN;
 
-        } else if (methodDesc.endsWith("F")) {
+        } else if (methodDesc.endsWith("F")) { // float
             value = Opcodes.FCONST_0;
             opcode = Opcodes.FRETURN;
 
-        } else if (methodDesc.endsWith("D")) {
+        } else if (methodDesc.endsWith("D")) { // double
             value = Opcodes.DCONST_0;
             opcode = Opcodes.DRETURN;
 
-        } else if (methodDesc.endsWith("V")) {
+        } else if (methodDesc.endsWith("V")) { // void
             opcode = Opcodes.RETURN;
 
         } else {

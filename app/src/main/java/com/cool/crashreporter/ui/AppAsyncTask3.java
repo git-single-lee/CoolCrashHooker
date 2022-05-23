@@ -4,18 +4,19 @@ import android.os.AsyncTask;
 
 import com.cool.crashcapture_core.core.CrashCaptureDoor;
 
-public class AppAsyncTask2 extends AsyncTask<String, Integer, String> {
+import java.util.ArrayList;
+import java.util.List;
+
+public class AppAsyncTask3 extends AsyncTask<String, Integer, List<String>> {
 
     @Override
-    protected String doInBackground(String... strings) {
+    protected List<String> doInBackground(String... strings) {
         String name = "1";
         for (int i = 0; i < 10 ; ++i) {
             if (i == 5) {
                 throw new RuntimeException("AppAsyncTask error");
             }
         }
-        return name;
+        return new ArrayList<String>();
     }
-
-
 }

@@ -1,5 +1,14 @@
 apply plugin: 'com.android.application'
-//apply plugin: 'crash.capture.plugin'
+apply plugin: 'crash.capture.plugin'
+
+//threadCapture {
+//    classToMethods = [
+//            "android/os/AsyncTask" : ["doInBackground"],
+//            "android/os/Handler"  : ["handleMessage"],
+//            "java/lang/Thread": ["run"],
+//            "java/lang/Runnable": ["run"],
+//    ]
+//}
 
 android {
     compileSdkVersion 31

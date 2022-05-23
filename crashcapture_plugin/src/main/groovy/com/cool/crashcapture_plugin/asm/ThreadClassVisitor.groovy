@@ -17,6 +17,7 @@ import org.objectweb.asm.Opcodes;
 public class ThreadClassVisitor extends ClassVisitor implements Opcodes {
     private int maybeThread = 0;
     private String name = "";
+    public Map<String, List<String>> classToMethods = new HashMap<>();
 
     public ThreadClassVisitor(int api) {
         super(api);
@@ -29,7 +30,7 @@ public class ThreadClassVisitor extends ClassVisitor implements Opcodes {
     @Override
     public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
         super.visit(version, access, name, signature, superName, interfaces);
-        this.maybeThread = tryInject(version, access, name, signature, superName, interfaces);
+        this.maybeThread = tryInjectClass(version, access, name, signature, superName, interfaces);
         this.name = name
     }
 
@@ -56,7 +57,7 @@ public class ThreadClassVisitor extends ClassVisitor implements Opcodes {
         return mv;
     }
 
-    public int tryInject(int version, int access, String name, String signature, String superName, String[] interfaces) {
+    public int tryInjectClass(int version, int access, String name, String signature, String superName, String[] interfaces) {
         if (interfaces != null) {
             for (String item : interfaces) {
                 if (item.equals("java/lang/Runnable")) {
@@ -78,11 +79,11 @@ public class ThreadClassVisitor extends ClassVisitor implements Opcodes {
 
     public boolean tryInjectMethod(String methodName, String methodDesc) {
         println("ThreadClassVisitor===> try inject: className: ${name} methodName: ${methodName} methodDesc:${methodDesc}" )
-        if (methodName.equals("run") && methodDesc.equals("()V"))
+        if (methodName.equals("run"))
             return true;
         if (methodName.equals("doInBackground"))
             return true;
-        if (methodName.equals("handleMessage") && methodDesc.equals("(Landroid/os/Message;)V")) {
+        if (methodName.equals("handleMessage")) {
             return true;
         }
         return false;

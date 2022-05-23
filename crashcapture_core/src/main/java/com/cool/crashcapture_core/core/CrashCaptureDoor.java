@@ -8,12 +8,20 @@ import java.io.StringWriter;
 public final class CrashCaptureDoor {
     private CrashCapture crashCapture = null;
 
+    private CrashCaptureDoor() {
+        intMainCatcher();
+    }
+
     private static class SingletonClassInstance {
         private static final CrashCaptureDoor instance = new CrashCaptureDoor();
     }
 
     public static CrashCaptureDoor getInstance() {
         return SingletonClassInstance.instance;
+    }
+
+    private void intMainCatcher() {
+
     }
 
 

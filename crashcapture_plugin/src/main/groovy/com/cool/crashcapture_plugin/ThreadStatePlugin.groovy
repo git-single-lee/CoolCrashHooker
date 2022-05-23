@@ -15,6 +15,8 @@ import org.gradle.api.Project
  * version: 1.0
  */
 public class ThreadStatePlugin implements Plugin<Project> {
+    private ThreadStateTransform serviceTransform
+
     @Override
     public void apply(Project project) {
         try {
@@ -22,20 +24,24 @@ public class ThreadStatePlugin implements Plugin<Project> {
             // just in is app module.
             if (project.plugins.hasPlugin(AppPlugin)) {
                 AppExtension appExtension = project.extensions.getByType(AppExtension)
-                Transform serviceTransform = new ThreadStateTransform();
+                serviceTransform = new ThreadStateTransform();
                 appExtension.registerTransform(serviceTransform)
             }
             if (!project.plugins.hasPlugin(AppPlugin)) {
                 println("crouter===> not app module, quit.")
                 return
             }
-            project.extensions.create("ThreadCapture", ThreadStateExtension)
+            project.extensions.create("threadCapture", ThreadStateExtension)
             // project evaluate over.
             project.afterEvaluate {
                 println("crouter===> we do something.")
-                Object extensionAble = project.extensions.findByName("ThreadCapture")
+                ThreadStateExtension extensionAble = project.extensions.findByName("threadCapture")
+                if (extensionAble == null) {
+                    extensionAble = new ThreadStateExtension();
+                }
+                extensionAble.defaultValues()
                 if (extensionAble != null) {
-                    ThreadStateExtension readyOk = extensionAble
+                    serviceTransform.setThreadStateExtension(extensionAble)
                 }
             }
         } catch(Exception e) {
